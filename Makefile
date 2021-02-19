@@ -25,17 +25,7 @@ GO_FILES_CMD := find . -name '*.go' | grep -v -E '$(GO_EXCLUDE)'
 .PHONY: dev
 
 ## Execute development pipeline
-dev: generate format lint build
-
-#-------------------------
-# Code generation
-#-------------------------
-.PHONY: generate
-
-## Generate go code
-generate:
-	@echo "==> generating go code"
-	GOFLAGS=-mod=vendor $(GO) generate $(pkgs)
+dev: format lint build
 
 #-------------------------
 # Checks
