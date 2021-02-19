@@ -1,0 +1,32 @@
+swagger: "2.0"
+
+info:
+  title: Conductor programming assessment
+  description: HTTP server in Go with Swagger endpoints definition
+  version: 0.1.0
+
+consumes:
+  - application/json
+
+produces:
+  - application/json
+
+schemes:
+  - http
+
+paths:
+  /health:
+    get:
+      summary: Returns API status.
+      description: Basic API health endpoint.
+      operationId: health
+      produces:
+        - text/plain
+      responses:
+        '200':
+          description: OK message
+          schema:
+            type: string
+            enum:
+              - OK
+
