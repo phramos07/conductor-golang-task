@@ -12,12 +12,8 @@ endif
 
 pkgs  = $(shell GOFLAGS=-mod=vendor $(GO) list ./... | grep -vE -e /vendor/ -e /pkg/swagger/)
 pkgDirs = $(shell GOFLAGS=-mod=vendor $(GO) list -f {{.Dir}} ./... | grep -vE -e /vendor/ -e /pkg/swagger/)
-DIR_OUT:=/tmp
 
 GOLANGCI:=$(shell command -v golangci-lint 2> /dev/null)
-
-GO_EXCLUDE := /vendor/|.pb.go|.gen.go
-GO_FILES_CMD := find . -name '*.go' | grep -v -E '$(GO_EXCLUDE)'
 
 #-------------------------
 # Final targets
@@ -57,7 +53,7 @@ endif
 
 ## Build all binaries
 build:
-	$(GO) build -o bin/conductor.out internal/main.go
+	$(GO) build -o bin/conductor internal/app.go
 
 ## Compress all binaries
 pack:
