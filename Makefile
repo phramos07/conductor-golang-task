@@ -23,6 +23,9 @@ GOLANGCI:=$(shell command -v golangci-lint 2> /dev/null)
 ## Execute development pipeline
 dev: format lint build
 
+run:
+	./bin/conductor
+
 #-------------------------
 # Checks
 #-------------------------
