@@ -82,19 +82,3 @@ pack:
 clean:
 	rm -rf $(DIRS_TO_CLEAN)
 	rm -f $(FILES_TO_CLEAN)
-
-#-------------------------
-# Target: swagger.validate
-#-------------------------
-.PHONY: swagger.validate
-
-swagger.validate:
-	swagger validate pkg/swagger/swagger.yml
-
-#-------------------------
-# Target: swagger.doc
-#-------------------------
-.PHONY: swagger.doc
-
-swagger.doc:
-	docker run -i yousan/swagger-yaml-to-html < pkg/swagger/swagger.yml > doc/index.html
