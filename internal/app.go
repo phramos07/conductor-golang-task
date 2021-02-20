@@ -23,6 +23,7 @@ func setUpRoutes(apiRouter *mux.Router) {
 
 func setUpMiddlewares(apiRouter *mux.Router) {
 	apiRouter.Use(middleware.LoggingMiddleware)
+	apiRouter.Use(middleware.AuthorizationMiddleware)
 }
 
 func main() {
