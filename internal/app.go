@@ -1,3 +1,30 @@
+// Conductor coding challenge API.
+//
+// OpenAPI doc for the Conductor coding challenge.
+//
+// Terms Of Service:
+//
+//     Schemes: http, https
+//     Host: localhost:8080/api
+//     Version: 1.0.0
+//     Contact: Supun Muthutantri<fakemail@gmail.com>
+//
+//     Consumes:
+//     - application/json
+//
+//     Produces:
+//     - application/json
+//
+//     Security:
+//     - APIKey:
+//
+//     SecurityDefinitions:
+//     APIKey:
+//          type: apiKey
+//          name: Authorization
+//          in: header
+//
+// swagger:meta
 package main
 
 import (
