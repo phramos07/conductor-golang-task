@@ -20,9 +20,13 @@ GOLANGCI:=$(shell command -v golangci-lint 2> /dev/null)
 #-------------------------
 .PHONY: dev
 
-## Execute development pipeline
-dev: format lint build
+## Build and run
+dev.run: dev run
 
+## Execute development pipeline
+dev: format lint swagger build
+
+## Run
 run:
 	./bin/conductor
 
@@ -30,17 +34,6 @@ run:
 # Checks
 #-------------------------
 .PHONY: format lint stats.loc
-
-check: format lint
-
-## Apply code format, import reorganization and code simplification on source code
-format:
-	@echo "==> formatting code"
-	@$(GO) fmt $(pkgs)
-	@echo "==> clean imports"
-	@goimports -w $(pkgDirs)
-	@echo "==> simplify code"
-	@gofmt -s -w $(pkgDirs)
 
 ## Validate code
 lint:
@@ -82,8 +75,8 @@ swagger: swagger.gen swagger.validate
 
 ## Generate swagger json
 swagger.gen:
-	swagger generate spec -o ./swagger.json
+	swagger generate spec -o ./internal/ui/swagger.json
 
 ## Validate swagger
 swagger.validate:
-	swagger validate ./swagger.json
+	swagger validate ./internal/ui/swagger.json
