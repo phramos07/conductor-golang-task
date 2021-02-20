@@ -5,7 +5,8 @@
 // Terms Of Service:
 //
 //     Schemes: http, https
-//     Host: localhost:8080/api
+//     Host: localhost:8080
+//	   BasePath: /api
 //     Version: 1.0.0
 //     Contact: Supun Muthutantri<fakemail@gmail.com>
 //

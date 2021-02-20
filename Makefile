@@ -66,8 +66,24 @@ pack:
 #-------------------------
 # Target: clean
 #-------------------------
+.PHONY: clean clean.conductor
 
 ## Clean build files
 clean:
 	rm -rf $(DIRS_TO_CLEAN)
 	rm -f $(FILES_TO_CLEAN)
+
+#-------------------------
+# Target: swagger
+#-------------------------
+.PHONY: swagger
+
+swagger: swagger.gen swagger.validate
+
+## Generate swagger json
+swagger.gen:
+	swagger generate spec -o ./swagger.json
+
+## Validate swagger
+swagger.validate:
+	swagger validate ./swagger.json
