@@ -56,7 +56,9 @@ func setUpMiddlewares(apiRouter *mux.Router) {
 
 func main() {
 	apiRouter := getAPIRouter()
-	//TODO: Add auth middleware to apiRouter
+
+	fs := http.FileServer(http.Dir("./internal/ui/"))
+	router.PathPrefix("/swagger/").Handler(http.StripPrefix("/swagger/", fs))
 
 	setUpRoutes(apiRouter)
 	setUpMiddlewares(apiRouter)
