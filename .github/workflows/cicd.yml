@@ -23,9 +23,10 @@ jobs:
       # Checks out a copy of your repository on the ubuntu-latest machine
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          ref: master
 
       # Runs the Linter action
       - name: Run Linter
-        run:
-          - make lint
+        run: make lint
 
