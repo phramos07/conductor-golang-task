@@ -44,7 +44,7 @@ mod.tidy:
 ## Validate code
 lint:
 ifndef GOLANGCI
-	$(error "Please install golangci! make get-tools")
+	$(error "Please install golangci!")
 endif
 	@golangci-lint run -v $(pkgDirs)
 
