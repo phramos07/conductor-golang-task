@@ -40,8 +40,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       
-      # - name: Generate Swagger Specs
-      #   run: make swagger.gen
+      - name: Generate Swagger Specs
+        run: make swagger.gen
       
       - name: Validate Swagger Specs
         run: make swagger.validate
