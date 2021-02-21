@@ -10,8 +10,8 @@ ifeq ($(GO),)
   $(error Could not find 'go' in path. Please install go, or if already installed either add it to your path or set GO to point to its directory)
 endif
 
-pkgs  = $(shell GOFLAGS=-mod=vendor $(GO) list ./... | grep -vE -e /vendor/ -e /pkg/swagger/)
-pkgDirs = $(shell GOFLAGS=-mod=vendor $(GO) list -f {{.Dir}} ./... | grep -vE -e /vendor/ -e /pkg/swagger/)
+pkgs  = $(shell GOFLAGS=-mod=mod)
+pkgDirs = $(shell GOFLAGS=-mod=mod)
 
 GOLANGCI:=$(shell command -v golangci-lint 2> /dev/null)
 
