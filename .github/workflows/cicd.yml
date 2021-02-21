@@ -29,6 +29,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Set-up Golang
+        uses: actions/setup-go@v2
+        with:
+          go-version: '^1.16.0'
+
+      - name: Install go-swagger
+        run: go get -u github.com/go-swagger/go-swagger/cmd/swagger
+
       - name: Checkout code
         uses: actions/checkout@v2
       
