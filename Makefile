@@ -48,6 +48,9 @@ ifndef GOLANGCI
 endif
 	@golangci-lint run -v $(pkgDirs)
 
+test:
+	$(GO) test -v ./internal/ 
+
 #-------------------------
 # Build artefacts
 #-------------------------
