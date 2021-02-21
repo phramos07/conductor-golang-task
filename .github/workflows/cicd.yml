@@ -1,6 +1,5 @@
 name: CICD
 
-# Run this workflow every time on push or pull requests on listed branches
 on:
   push:
     branches:
@@ -11,23 +10,31 @@ on:
       - devel
 
 jobs:
-  # Set the job key. The key is displayed as the job name
-  # when a job name is not provided
+
   lint:
-    # Name the Job
     name: Lint
-    # Set the type of machine to run on
     runs-on: ubuntu-latest
 
     steps:
-      # Checks out a copy of your repository on the ubuntu-latest machine
       - name: Checkout code
         uses: actions/checkout@v2
-        with:
-          ref: master
 
-      # Runs the Linter action
       - name: Run Linter
         uses: golangci/golangci-lint-action@v2
         with:
           version: v1.29
+
+  swagger:
+    name: Swagger Validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Generate Swagger Specs
+        run: make swagger.gen
+      
+      - name: Validate Swagger Specs
+        run: make swagger.validate
+
