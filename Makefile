@@ -24,7 +24,7 @@ GOLANGCI:=$(shell command -v golangci-lint 2> /dev/null)
 dev.run: dev run
 
 ## Execute development pipeline
-dev: format lint swagger build
+dev: mod.cache lint swagger build
 
 ## Run
 run:
@@ -33,7 +33,13 @@ run:
 #-------------------------
 # Checks
 #-------------------------
-.PHONY: format lint stats.loc
+.PHONY: lint stats.loc
+
+mod: mod.tidy
+	$(GO) mod download
+
+mod.tidy:
+	$(GO) mod tidy
 
 ## Validate code
 lint:
@@ -75,8 +81,10 @@ swagger: swagger.gen swagger.validate
 
 ## Generate swagger json
 swagger.gen:
-	swagger generate spec -o ./internal/ui/swagger.json
+	@echo ">> generating swagger json"
+	swagger generate spec -o ./static/swagger.json
 
 ## Validate swagger
 swagger.validate:
-	swagger validate ./internal/ui/swagger.json
+	@echo ">> validating swagger json"
+	swagger validate ./static/swagger.json
