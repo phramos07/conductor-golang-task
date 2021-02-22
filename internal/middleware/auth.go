@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -14,7 +13,6 @@ const (
 
 func auth(token string) bool {
 	authToken := os.Getenv(authEnvVar)
-	fmt.Println("authToken: ", authToken, "token: ", token)
 
 	return authToken == token
 }

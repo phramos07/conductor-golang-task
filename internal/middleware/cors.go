@@ -8,7 +8,7 @@ const (
 	accessControlOriginHeader      = "Access-Control-Allow-Origin"
 	accessControlOriginHeaderValue = "*"
 	accessControlHeader            = "Access-Control-Allow-Headers"
-	accessControlHeaderValue       = "Content-Type, api_key, Authorization"
+	accessControlHeaderValue       = "Content-Type, api_key, Authorization, Origin, X-Requested-With, Accept"
 )
 
 // CorsMiddleware ...
