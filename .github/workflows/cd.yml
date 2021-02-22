@@ -37,4 +37,4 @@ jobs:
           heroku_email: ${{secrets.HEROKU_EMAIL}}
           usedocker: true
         env:
-          AUTHORIZATION: ${{ secrets.AUTHORIZATION }}
+          AUTHORIZATION: ${{secrets.AUTHORIZATION}}
