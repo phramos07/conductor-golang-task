@@ -5,8 +5,6 @@ on:
     workflows: ["CI"]
     branches:
       - master
-    tags:
-      - v*
     types:
       - completed
 
