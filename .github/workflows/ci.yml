@@ -48,7 +48,7 @@ jobs:
 
   test:
     name: Test
-    needs: lint
+    needs: [lint, swagger]
     runs-on: ubuntu-latest
 
     steps:
@@ -62,3 +62,17 @@ jobs:
 
       - name: Unit Tests
         run: make test
+
+  deploy:
+    name: Build & Deploy
+    needs: test
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Invoke Build & Deploy Workflow
+        if: github.ref == 'refs/heads/master'
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: Build & Deploy
+          token: ${{ secrets.PAT }}
+      
