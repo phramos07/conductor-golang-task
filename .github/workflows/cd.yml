@@ -1,14 +1,7 @@
 name: Build & Deploy
 
 on:
-  workflow_run:
-    workflows: ["CI"]
-    branches:
-      - master
-    tags:
-      - v*
-    types:
-      - completed
+  workflow_dispatch:
 
 jobs:
   build:
