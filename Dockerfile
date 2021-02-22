@@ -36,7 +36,7 @@ COPY --from=build_base /tmp/conductor/bin/conductor /app/conductor
 COPY --from=build_base /tmp/conductor/static /static
 
 # Run the binary program produced by `build phase`
-CMD /app/conductor --port 8080
+CMD /app/conductor
 
 # This container exposes port 8080 to the outside world
 EXPOSE 8080
