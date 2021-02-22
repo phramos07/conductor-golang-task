@@ -1,0 +1,48 @@
+name: CD
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    branches:
+      - master
+    tags:
+      - v*
+    types:
+      - completed
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set-up Golang
+        uses: actions/setup-go@v2
+        with:
+          go-version: '^1.16.0'
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build
+        run: make build
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+      
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build, Push and Deploy docker image to Heroku #set the whatever name you want to this step
+        id: heroku
+        uses: jctaveras/heroku-deploy@v2.1.1  # use the latest version of the action
+        with:
+          email: ${{ secrets.HEROKU_EMAIL }} # your heroku email
+          api_key: ${{ secrets.HEROKU_API_KEY }} # your  heroku api key
+          app_name: ${{ secrets.HEROKU_APP_NAME }} # you aplication name
+          dockerfile_path: . # set the path to the folder wher the Dokerfile is located
+          options: '' # Docker Build Options
+          formation: '' # Docker Dyno Formation. By default is web
