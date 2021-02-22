@@ -63,12 +63,15 @@ func setUpRoutes(apiRouter *mux.Router) {
 }
 
 // Sets up middlewares in the API router
-func setUpMiddlewares(apiRouter *mux.Router) {
-	apiRouter.Use(mux.CORSMethodMiddleware(apiRouter),
+func setUpRootMiddlewares(root *mux.Router) {
+	root.Use(
 		middleware.CorsMiddleware,
 		middleware.LoggingMiddleware,
-		middleware.AuthorizationMiddleware)
+	)
+}
 
+func setUpAPIMiddlewares(apiRouter *mux.Router) {
+	apiRouter.Use(middleware.AuthorizationMiddleware)
 }
 
 // Loads env variables for local development
@@ -82,15 +85,21 @@ func loadEnv() {
 
 // APP's entrypoint
 func main() {
+	// Load env variables in development env
 	loadEnv()
 
 	apiRouter := getAPIRouter()
 
+	// Routes
+	setUpRoutes(apiRouter)
+
+	// Middlewares
+	setUpRootMiddlewares(router)
+	setUpAPIMiddlewares(apiRouter)
+
+	// Serve Swagger UI
 	fs := http.FileServer(http.Dir(uiPath))
 	router.PathPrefix(swaggerPrefix).Handler(http.StripPrefix(swaggerPrefix, fs))
-
-	setUpRoutes(apiRouter)
-	setUpMiddlewares(apiRouter)
 
 	// $PORT is defined in the server
 	var port string
@@ -101,5 +110,9 @@ func main() {
 	}
 
 	log.Printf("Listening on localhost:%s", port)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), router))
+
+	log.Fatal(
+		http.ListenAndServe(
+			fmt.Sprintf(":%s", port),
+			router))
 }

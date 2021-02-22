@@ -2,25 +2,33 @@ package middleware
 
 import (
 	"net/http"
+
+	"github.com/rs/cors"
 )
 
-const (
-	accessControlOriginHeader      = "Access-Control-Allow-Origin"
-	accessControlOriginHeaderValue = "*"
-	accessControlHeader            = "Access-Control-Allow-Headers"
-	accessControlHeaderValue       = "Content-Type, api_key, Authorization, Origin, X-Requested-With, Accept"
-)
+var corsm *cors.Cors = cors.New(
+	cors.Options{
+		Debug: true,
+
+		AllowedMethods: []string{
+			http.MethodGet,
+			http.MethodPost,
+			http.MethodPut,
+			http.MethodDelete,
+			http.MethodOptions,
+		},
+
+		AllowCredentials: true,
+
+		AllowedHeaders: []string{
+			"Content-Type",
+			"api_key",
+			"Authorization",
+			"Origin",
+			"X-Requested-With",
+			"Accept",
+		},
+	})
 
 // CorsMiddleware ...
-func CorsMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set(accessControlOriginHeader, accessControlOriginHeaderValue)
-		w.Header().Set(accessControlHeader, accessControlHeaderValue)
-
-		if r.Method == http.MethodOptions {
-			return
-		}
-
-		next.ServeHTTP(w, r)
-	})
-}
+var CorsMiddleware = corsm.Handler
