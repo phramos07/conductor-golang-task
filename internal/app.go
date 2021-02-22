@@ -30,16 +30,21 @@ package main
 import (
 	"conductor/internal/control"
 	"conductor/internal/middleware"
+	"fmt"
+	"os"
 
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
 )
 
 const (
-	uiPath        = "./static/"
-	swaggerPrefix = "/swagger/"
+	uiPath          = "./static/"
+	swaggerPrefix   = "/swagger/"
+	portEnvVariable = "PORT"
+	standardPort    = "8080"
 )
 
 // Base router. Will be used for swaggerUI server
@@ -63,8 +68,19 @@ func setUpMiddlewares(apiRouter *mux.Router) {
 	apiRouter.Use(middleware.AuthorizationMiddleware)
 }
 
+// Loads env variables for local development
+func loadEnv() {
+	log.Println("Loading environment variables for local development")
+	err := godotenv.Load()
+	if err != nil {
+		log.Println("No .env file found.")
+	}
+}
+
 // APP's entrypoint
 func main() {
+	loadEnv()
+
 	apiRouter := getAPIRouter()
 
 	fs := http.FileServer(http.Dir(uiPath))
@@ -73,6 +89,14 @@ func main() {
 	setUpRoutes(apiRouter)
 	setUpMiddlewares(apiRouter)
 
-	log.Println("Listening on localhost:8080")
-	log.Fatal(http.ListenAndServe(":8080", router))
+	// $PORT is defined in the server
+	var port string
+	port, found := os.LookupEnv(portEnvVariable)
+
+	if !found || port == "" {
+		port = standardPort
+	}
+
+	log.Printf("Listening on localhost:%s", port)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), router))
 }

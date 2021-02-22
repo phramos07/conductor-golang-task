@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	authHeader = "Authorization"
+	authHeader = "AUTHORIZATION"
 )
 
 func auth(token string) bool {
