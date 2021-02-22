@@ -64,8 +64,11 @@ func setUpRoutes(apiRouter *mux.Router) {
 
 // Sets up middlewares in the API router
 func setUpMiddlewares(apiRouter *mux.Router) {
-	apiRouter.Use(middleware.LoggingMiddleware)
-	apiRouter.Use(middleware.AuthorizationMiddleware)
+	apiRouter.Use(mux.CORSMethodMiddleware(apiRouter),
+		middleware.CorsMiddleware,
+		middleware.LoggingMiddleware,
+		middleware.AuthorizationMiddleware)
+
 }
 
 // Loads env variables for local development
