@@ -4,7 +4,7 @@
 //
 // Terms Of Service:
 //
-//     Schemes: http, https
+//     Schemes: https
 //	   BasePath: /api
 //     Version: 1.0.0
 //     Contact: Supun Muthutantri<fakemail@gmail.com>
