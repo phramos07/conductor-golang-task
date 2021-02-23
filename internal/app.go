@@ -67,6 +67,7 @@ func setUpRootMiddlewares(root *mux.Router) {
 	root.Use(
 		middleware.CorsMiddleware,
 		middleware.LoggingMiddleware,
+		middleware.RecoverMiddleware,
 	)
 }
 
