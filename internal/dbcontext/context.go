@@ -1,4 +1,4 @@
-package model
+package dbcontext
 
 import (
 	"database/sql"
@@ -10,7 +10,7 @@ const (
 	dbFilepath = "./internal/model/database.db"
 )
 
-var sqlitedb *sql.DB
+var dbcontext *sql.DB
 
 // Create ...
 func Create() {
@@ -22,7 +22,7 @@ func Create() {
 		file.Close()
 	}
 
-	sqlitedb, _ = sql.Open("sqlite3", dbFilepath) // Open the created SQLite File
+	dbcontext, _ = sql.Open("sqlite3", dbFilepath) // Open the created SQLite File
 }
 
 // Renew db file. To be called before Create(), if needed.
@@ -35,7 +35,7 @@ func Renew() {
 
 // Close ...
 func Close() {
-	sqlitedb.Close()
+	dbcontext.Close()
 }
 
 // CreateTables ...

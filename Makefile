@@ -24,7 +24,7 @@ GOLANGCI:=$(shell command -v golangci-lint 2> /dev/null)
 dev.run: dev run
 
 ## Execute development pipeline
-dev: mod.cache lint swagger build
+dev: mod lint swagger build
 
 ## Run
 run:
