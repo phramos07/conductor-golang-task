@@ -8,7 +8,7 @@ import (
 
 var corsm *cors.Cors = cors.New(
 	cors.Options{
-		Debug: true,
+		// Debug: true,
 
 		AllowedMethods: []string{
 			http.MethodGet,

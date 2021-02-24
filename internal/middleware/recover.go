@@ -6,6 +6,10 @@ import (
 	"net/http"
 )
 
+const (
+	unknownErrorStr = "Unknown error."
+)
+
 // Internal method that deals with error messages
 func recoverInternal(w http.ResponseWriter) {
 	var err error
@@ -17,7 +21,7 @@ func recoverInternal(w http.ResponseWriter) {
 		case error:
 			err = t
 		default:
-			err = errors.New("Unknown error")
+			err = errors.New(unknownErrorStr)
 		}
 		log.Printf("Panic: %s\n", err.Error())
 		http.Error(w, err.Error(), http.StatusInternalServerError)
