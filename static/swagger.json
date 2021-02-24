@@ -6,6 +6,7 @@
     "application/json"
   ],
   "schemes": [
+    "http",
     "https"
   ],
   "swagger": "2.0",
@@ -20,6 +21,21 @@
   },
   "basePath": "/api",
   "paths": {
+    "/accounts": {
+      "get": {
+        "description": "description: Retrieves all accounts stored in the database.",
+        "tags": [
+          "accounts"
+        ],
+        "summary": "summary: Retrieves all accounts.",
+        "operationId": "getAccounts",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/accountsResponse"
+          }
+        }
+      }
+    },
     "/health": {
       "get": {
         "description": "If the API is online, an OK will be returned.",
@@ -41,6 +57,63 @@
               "type": "string"
             }
           }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "account": {
+      "type": "object",
+      "title": "Account model.",
+      "required": [
+        "id",
+        "status",
+        "created_at",
+        "updated_at",
+        "deleted_at"
+      ],
+      "properties": {
+        "created_at": {
+          "description": "Time the Account was created",
+          "type": "string",
+          "format": "date-time",
+          "x-go-name": "CreatedAt"
+        },
+        "deleted_at": {
+          "description": "Time the Account was deleted",
+          "type": "string",
+          "format": "date-time",
+          "x-go-name": "DeletedAt"
+        },
+        "id": {
+          "description": "The ID of the Account",
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ID"
+        },
+        "status": {
+          "description": "Status of the order.",
+          "type": "string",
+          "x-go-name": "Status"
+        },
+        "updated_at": {
+          "description": "Time the Account was updated",
+          "type": "string",
+          "format": "date-time",
+          "x-go-name": "UpdatedAt"
+        }
+      },
+      "x-go-name": "Account",
+      "x-go-package": "conductor/internal/model"
+    }
+  },
+  "responses": {
+    "accountsResponse": {
+      "description": "An AccountsResponse response model\n\nThis is used for returning a response with multiple accounts as body",
+      "schema": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/account"
         }
       }
     }

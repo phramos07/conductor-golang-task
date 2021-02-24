@@ -6,39 +6,41 @@ import (
 	"log"
 )
 
-var createQuery string = `CREATE IF NOT EXISTS TABLE Account (
-	"id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,		
-	"status" VARCHAR,
-	"created_at" VARCHAR,
-	"updated_at" VARCHAR,
-	"deleted_at" VARCHAR		
-  );`
+const (
+	createQuery = `CREATE TABLE IF NOT EXISTS Account (
+		"id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,		
+		"status" VARCHAR,
+		"created_at" VARCHAR,
+		"updated_at" VARCHAR,
+		"deleted_at" VARCHAR		
+	  );`
 
-var addQuery string = `INSERT INTO Account(status, created_at) VALUES (?, ?)`
+	addQuery = `INSERT INTO Account(status, created_at) VALUES (?, datetime('now'))`
 
-var getAllQuery string = `SELECT * FROM Account`
+	getAllQuery = `SELECT * FROM Account`
+)
 
 // CreateAccountTable Create table Account on DB
 func CreateAccountTable() {
-	statement, err := dbcontext.Prepare(createQuery)
+	statement, err := GetDbContext().Prepare(createQuery)
 	if err != nil {
-		log.Fatal("Couldn't create Account table.")
+		log.Fatal("Couldn't create Account table.", err)
 	}
 
 	_, err = statement.Exec()
 	if err != nil {
-		log.Fatal(fmt.Sprintf("Couldn't execute query %s\n", createQuery))
+		log.Fatal(fmt.Sprintf("Couldn't execute query %s\n", createQuery), err)
 	}
 }
 
 // AddAccount Add new to the Account table
-func AddAccount() {
-	statement, err := dbcontext.Prepare(addQuery)
+func AddAccount(account model.Account) {
+	statement, err := GetDbContext().Prepare(addQuery)
 	if err != nil {
 		panic("Couldn't execute Add account query")
 	}
 
-	_, err = statement.Exec()
+	_, err = statement.Exec(account.Status)
 	if err != nil {
 		panic(fmt.Sprintf("Couldn't execute query %s\n", addQuery))
 	}
@@ -47,7 +49,7 @@ func AddAccount() {
 // GetAccounts gets all accounts
 func GetAccounts() []model.Account {
 	var accounts []model.Account
-	row, err := dbcontext.Query(getAllQuery)
+	row, err := GetDbContext().Query(getAllQuery)
 	if err != nil {
 		panic(err)
 	}
@@ -60,7 +62,7 @@ func GetAccounts() []model.Account {
 			&tmpAccount.Status,
 			&tmpAccount.CreatedAt,
 			&tmpAccount.UpdatedAt,
-			tmpAccount.DeletedAt,
+			&tmpAccount.DeletedAt,
 		)
 		if err != nil {
 			panic(err)

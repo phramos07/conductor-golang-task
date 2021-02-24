@@ -2,15 +2,8 @@ package model
 
 import "github.com/go-openapi/strfmt"
 
-/*
-Table Account{
-    id int [pk, increment]
-    status varchar
-    created_at datetime
-    updated_at datetime
-    deleted_at datetime
-  }
-*/
+// Account model.
+//
 //swagger:model account
 type Account struct {
 	// The ID of the Account

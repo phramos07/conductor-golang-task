@@ -12,9 +12,15 @@ const (
 
 var dbcontext *sql.DB
 
-// Create ...
+// GetDbContext Returns dbcontext object
+func GetDbContext() *sql.DB {
+	return dbcontext
+}
+
+// Create Create DBContext.
 func Create() {
-	if _, err := os.Stat(dbFilepath); os.IsNotExist(err) {
+	var err error
+	if _, err = os.Stat(dbFilepath); os.IsNotExist(err) {
 		file, err := os.Create(dbFilepath) // Create SQLite file
 		if err != nil {
 			log.Fatal(err.Error())
@@ -22,7 +28,10 @@ func Create() {
 		file.Close()
 	}
 
-	dbcontext, _ = sql.Open("sqlite3", dbFilepath) // Open the created SQLite File
+	dbcontext, err = sql.Open("sqlite3", dbFilepath) // Open the created SQLite File
+	if err != nil {
+		log.Fatal(err.Error())
+	}
 }
 
 // Renew db file. To be called before Create(), if needed.
@@ -33,13 +42,12 @@ func Renew() {
 	}
 }
 
-// Close ...
+// Close Closes DBContext. Should be deferred at App's entrypoint.
 func Close() {
 	dbcontext.Close()
 }
 
-// CreateTables ...
+// CreateTables Create all tables.
 func CreateTables() {
-	// Empty
-	// TODO: Call every entity createtable method available in the model package
+	CreateAccountTable()
 }

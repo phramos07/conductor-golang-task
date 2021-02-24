@@ -4,7 +4,7 @@
 //
 // Terms Of Service:
 //
-//     Schemes: https
+//     Schemes: http, https
 //	   BasePath: /api
 //     Version: 1.0.0
 //     Contact: Supun Muthutantri<fakemail@gmail.com>
@@ -29,6 +29,7 @@ package main
 
 import (
 	"conductor/internal/control"
+	"conductor/internal/dbcontext"
 	"conductor/internal/middleware"
 	"fmt"
 	"os"
@@ -38,6 +39,9 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
+
+	// Indirect imports
+	_ "github.com/mattn/go-sqlite3"
 )
 
 const (
@@ -60,6 +64,7 @@ func getAPIRouter() *mux.Router {
 // Sets up routes in the API router
 func setUpRoutes(apiRouter *mux.Router) {
 	control.AddHealthRoutes(apiRouter)
+	control.AddAccountsRoutes(apiRouter)
 }
 
 // Sets up middlewares in the API router
@@ -88,6 +93,12 @@ func loadEnv() {
 func main() {
 	// Load env variables in development env
 	loadEnv()
+
+	// Database load
+	dbcontext.Renew()
+	dbcontext.Create()
+	dbcontext.CreateTables()
+	defer dbcontext.Close()
 
 	apiRouter := getAPIRouter()
 

@@ -7,10 +7,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-const (
-	path = "/health"
-)
-
 // swagger:operation GET /health health getHealth
 // ---
 // summary: Health check. Return API health status.
@@ -31,5 +27,5 @@ func getHealth(w http.ResponseWriter, r *http.Request) {
 // AddHealthRoutes ...
 // Adds routes from path Health to the main API router
 func AddHealthRoutes(r *mux.Router) {
-	r.HandleFunc(path, getHealth).Methods(http.MethodGet, http.MethodOptions)
+	r.HandleFunc(healthPath, getHealth).Methods(http.MethodGet, http.MethodOptions)
 }

@@ -17,8 +17,7 @@ func loggingHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Request %s %s Header: %s Body: %s", r.Method, r.RequestURI, headerStr.String(), r.Body)
 }
 
-// LoggingMiddleware ...
-// Middleware
+// LoggingMiddleware Logs activity in the webapp's requests.
 func LoggingMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		loggingHandler(w, r)

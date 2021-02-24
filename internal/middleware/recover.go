@@ -4,6 +4,8 @@ import (
 	"errors"
 	"log"
 	"net/http"
+
+	"conductor/internal/model"
 )
 
 const (
@@ -14,17 +16,21 @@ const (
 func recoverInternal(w http.ResponseWriter) {
 	var err error
 	r := recover()
+	statusCode := http.StatusInternalServerError
 	if r != nil {
 		switch t := r.(type) {
 		case string:
 			err = errors.New(t)
+		case model.CustomError:
+			err = t
+			statusCode = t.StatusCode()
 		case error:
 			err = t
 		default:
 			err = errors.New(unknownErrorStr)
 		}
 		log.Printf("Panic: %s\n", err.Error())
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), statusCode)
 	}
 }
 

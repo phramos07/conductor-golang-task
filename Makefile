@@ -58,7 +58,7 @@ test:
 
 ## Build all binaries
 build:
-	$(GO) build -o bin/conductor internal/app.go
+	CGO_ENABLED=1 $(GO) build -o  bin/conductor internal/app.go 
 
 ## Compress all binaries
 pack:
