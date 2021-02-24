@@ -23,13 +23,17 @@ func recoverInternal(w http.ResponseWriter) {
 			err = errors.New(t)
 		case model.CustomError:
 			err = t
-			statusCode = t.StatusCode()
+			switch t.ErrorType() {
+			case model.ERROR_DEFAULT:
+				statusCode = http.StatusInternalServerError
+			}
 		case error:
 			err = t
 		default:
 			err = errors.New(unknownErrorStr)
 		}
 		log.Printf("Panic: %s\n", err.Error())
+		log.Printf("\n\nConteudo do erro: %s\n\n", err.Error())
 		http.Error(w, err.Error(), statusCode)
 	}
 }

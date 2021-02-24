@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	dbFilepath = "./internal/model/database.db"
+	dbFilepath = "./internal/dbcontext/database.db"
 )
 
 var dbcontext *sql.DB
@@ -38,7 +38,7 @@ func Create() {
 func Renew() {
 	err := os.Remove(dbFilepath) // I delete the file to avoid duplicated records.
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Println("Couldn't delete the db file.", err.Error())
 	}
 }
 

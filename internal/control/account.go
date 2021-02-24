@@ -19,18 +19,30 @@ type AccountsResponse struct {
 	Payload []model.Account `json:"accounts"`
 }
 
-// swagger:route GET /accounts accounts getAccounts
+type AccountRequest struct {
+}
+
+// swagger:operation GET /accounts accounts getAccounts
 // ---
 // summary: Retrieves all accounts.
 // description: Retrieves all accounts stored in the database.
 // responses:
-//   200: accountsResponse
+//   '200':
+//     "$ref": "#/responses/accountsResponse"
+//   '204':
+//     description: No accounts found.
+//     schema:
+//       type: string
 func getAccounts(w http.ResponseWriter, r *http.Request) {
 	accounts := facade.GetAccounts()
-	w.Header().Set(contentTypeHeader, contentTypeJSON)
-	err := json.NewEncoder(w).Encode(AccountsResponse{Payload: accounts})
-	if err != nil {
-		panic(err)
+	if len(accounts) == 0 {
+		w.WriteHeader(http.StatusNoContent)
+	} else {
+		w.Header().Set(contentTypeHeader, contentTypeJSON)
+		err := json.NewEncoder(w).Encode(AccountsResponse{Payload: accounts})
+		if err != nil {
+			panic(err)
+		}
 	}
 }
 

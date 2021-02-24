@@ -23,15 +23,21 @@
   "paths": {
     "/accounts": {
       "get": {
-        "description": "description: Retrieves all accounts stored in the database.",
+        "description": "Retrieves all accounts stored in the database.",
         "tags": [
           "accounts"
         ],
-        "summary": "summary: Retrieves all accounts.",
+        "summary": "Retrieves all accounts.",
         "operationId": "getAccounts",
         "responses": {
           "200": {
             "$ref": "#/responses/accountsResponse"
+          },
+          "204": {
+            "description": "No accounts found.",
+            "schema": {
+              "type": "string"
+            }
           }
         }
       }
