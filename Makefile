@@ -24,7 +24,7 @@ GOLANGCI:=$(shell command -v golangci-lint 2> /dev/null)
 dev.run: dev run
 
 ## Execute development pipeline
-dev: mod.cache lint swagger build
+dev: mod lint swagger build
 
 ## Run
 run:
@@ -58,7 +58,7 @@ test:
 
 ## Build all binaries
 build:
-	$(GO) build -o bin/conductor internal/app.go
+	CGO_ENABLED=1 $(GO) build -o  bin/conductor internal/app.go 
 
 ## Compress all binaries
 pack:

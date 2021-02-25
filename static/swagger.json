@@ -21,6 +21,153 @@
   },
   "basePath": "/api",
   "paths": {
+    "/accounts": {
+      "get": {
+        "description": "Retrieves all accounts stored in the database.",
+        "tags": [
+          "accounts"
+        ],
+        "summary": "Retrieves all accounts.",
+        "operationId": "getAccounts",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/accountsResponse"
+          },
+          "204": {
+            "description": "No accounts found.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Creates new account in the database.",
+        "tags": [
+          "accounts"
+        ],
+        "summary": "Creates new account.",
+        "operationId": "postAccount",
+        "parameters": [
+          {
+            "x-go-name": "Account",
+            "name": "account",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "status"
+              ],
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "x-go-name": "Status"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/accountCreatedResponse"
+          }
+        }
+      }
+    },
+    "/accounts/{id}": {
+      "get": {
+        "description": "Retrieve account from the database that matches given ID.",
+        "tags": [
+          "accounts"
+        ],
+        "summary": "Retrieves one account by ID.",
+        "operationId": "getAccount",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "uint64",
+            "x-go-name": "ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Account retrieved.",
+            "schema": {
+              "$ref": "#/definitions/account"
+            }
+          },
+          "204": {
+            "description": "No account found with given ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "put": {
+        "description": "Updates the status of account from the database that matches given ID.",
+        "tags": [
+          "accounts"
+        ],
+        "summary": "Updates the status of one account by ID.",
+        "operationId": "updateAccount",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "uint64",
+            "x-go-name": "ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "Status",
+            "name": "status",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Account updated."
+          },
+          "204": {
+            "description": "No account found with given ID."
+          }
+        }
+      },
+      "delete": {
+        "description": "Deletes account from the database that matches given ID.",
+        "tags": [
+          "accounts"
+        ],
+        "summary": "Deletes one account by ID.",
+        "operationId": "deleteAccount",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "uint64",
+            "x-go-name": "ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Account deleted."
+          },
+          "204": {
+            "description": "No account found with given ID."
+          }
+        }
+      }
+    },
     "/health": {
       "get": {
         "description": "If the API is online, an OK will be returned.",
@@ -42,6 +189,78 @@
               "type": "string"
             }
           }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "account": {
+      "type": "object",
+      "title": "Account model.",
+      "required": [
+        "id",
+        "status",
+        "created_at",
+        "updated_at",
+        "deleted_at"
+      ],
+      "properties": {
+        "created_at": {
+          "description": "Time the Account was created",
+          "type": "string",
+          "format": "date-time",
+          "x-go-name": "CreatedAt"
+        },
+        "deleted_at": {
+          "description": "Time the Account was deleted",
+          "type": "string",
+          "format": "date-time",
+          "x-go-name": "DeletedAt"
+        },
+        "id": {
+          "description": "The ID of the Account",
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ID"
+        },
+        "status": {
+          "description": "Status of the order.",
+          "type": "string",
+          "x-go-name": "Status"
+        },
+        "updated_at": {
+          "description": "Time the Account was updated",
+          "type": "string",
+          "format": "date-time",
+          "x-go-name": "UpdatedAt"
+        }
+      },
+      "x-go-name": "Account",
+      "x-go-package": "conductor/internal/model"
+    }
+  },
+  "responses": {
+    "accountCreatedResponse": {
+      "description": "The AccountCreatedResponse contains the ID of the created account.",
+      "schema": {
+        "type": "object",
+        "required": [
+          "ID"
+        ],
+        "properties": {
+          "ID": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      }
+    },
+    "accountsResponse": {
+      "description": "An AccountsResponse response model\n\nThis is used for returning a response with multiple accounts as body",
+      "schema": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/account"
         }
       }
     }

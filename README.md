@@ -1,117 +1,176 @@
-### Desafio Conductor de Seleção
-Olá, queremos convidá-lo a participar de nosso desafio de seleção.  Pronto para participar? Seu trabalho será visto por nosso time e você receberá ao final um feedback sobre o que achamos do seu trabalho. Não é legal?
+### Desafio Conductor de Seleção: RESTful API em Golang
+O desafio consistiu no design e implementação de uma aplicação web (API RESTful) em golang.
 
-### Sobre a oportunidade 
-Temos vagas com diversos níveis, Júnior, Pleno, Senior e Especialista, para cada um deles utilizaremos critérios específicos considerando seu nível, combinado? 
-Se você for aprovado nesta etapa, será convidado para uma entrevista com nosso time de especialistas.
+Até a presente entrega do desafio (25/02/2021) as seguintes features já foram implementadas:
 
-### Desafio Técnico
-  
-#### Sobre a Conductor
-Oferecemos soluções em meios de pagamento para empresas de todos os tamanhos e áreas de atuação, tanto no varejo como no setor financeiro. Nossa missão é simplificar e desburocratizar suas trocas financeiras através da tecnologia, com agilidade, foco no cliente, uma visão ampla do negócio e práticas inovadoras.
+1. CICD completo com deploy em Heroku via container docker
+  * CI com os estágios de Lint, Test, Swagger Generation e Trigger de CD
+  * CD com Build local, Build da imagem docker e deploy do container em Heroku
+2. Arquitetura base do webapp:
+  * Roteamento e pipeline HTTP em Gorilla Mux
+  * Middlewares de Authorização em header
+  * Middleware de CORS
+  * Middleware de logging
+  * Middleware de recovery, com tratamento básico para status codes de erro como 404, 402, 500
+  * Divisão em camadas (Control | Facade | DBContext)
+  * Integração com um banco embarcado (SQLite)
+3. Documentação da API via Swagger com a biblioteca go-swagger
+4. CRUD Completo da entidade 'Account'
 
-#### Nossos Números
-Por se tratar de sistemas financeiros, um dos principais desafios é conseguir ter uma alta disponibilidade, resiliência, escalabilidade e confiabilidade. Ou seja, nossos sistemas precisam ser benfeitos o suficiente para atender os seguintes números:
+O que ficou faltando até a data de 25/02/2021:
 
-  - 85 milhões de cartões emitidos;
-  - 27 milhões de usuários ativos;
-  - 1.2 bilhões de transações por ano;
-  - R$ 100 bilhões processados anualmente;
-  - Mais de 520 mil PDVs e TEFs conectados aos nossos sistemas;
-  - 50% de crescimento médio desde 2012.
+1. CRUD da entidade 'Transactions'
+2. CRUD da entidade 'Cards'
+3. Endpoint de geração do PDF
+4. Testes de unidade
+5. Ajustes de segurança, como:
+  * Paginação nas rotas de listagem
+  * Autenticação via token de expiração
+  * Tratamento + aprofundado de retornos de rotas (status codes + explicativos)
+6. gRPC em k8s
+7. Injeção de dependências e separação por Interface (I de SOLID)
+7. Outros pormenores, como:
+  * Extração de algumas constantes
+  * Code-review
+  * Separação de ambientes de Prod e Staging no CICD
 
-  Complexo, não? Pois é, para conseguirmos atingir esses números com excelência, precisamos de um time robusto, por isso a necessidade de aplicar tal teste. Vamos ao que interessa...
+### Sobre o andamento do desenvolvimento
 
-  #### O Desafio
+Foi a primeira aplicação web que eu já fiz em go. Até então eu tinha feito somente duas lambdas simples, um software de investimento automatizado na bolsa que utilizada médias móveis (feito com gochannels) e um 'game of life' do Conway. 
 
-  Nossos clientes são em sua maioria bancos, fintechs e varejistas, muitos ofertam para seus usuários, além de cartões de crédito, contas digitais, pagamentos de contas, transferências, recarga de celular e etc. 
+#### SOLID:
 
-  Para esse desafio iremos focar no nosso produto de emissão de cartão de crédito, esse por sua vez precisa de vários serviços, um deles é uma API que permite que os nossos clientes consumam para saber todas as transações de um determinado usuário e também de uma outra API para baixar um PDF contendo a fatura do cartão.
-  
-  A problemática é que quando você possuí mais de 27 milhões de usuários, a performance e escalabilidade desses serviços precisam ser muito alta, principalmente a geração de faturas em PDF, essa por sua vez necessita de muitas informações e consome um certo processamento para gerar o arquivo.
+I - Como era meu primeiro web-app em go, usando várias libs pela primeira vez, acredito que eu possa melhorar muito em alguns pontos SOLID como por exemplo Interface Segregation. Tentei aplicar Interface Segregation no tratamento de Erros, mas acredito que seja possível separar as camadas inteiramente por interfaces (Controller | Facade | DBContext), porém não soube exatamente como fazer e requeria + tempo e estudo. 
 
-  Portanto, o desafio será a construção de uma API que permita a consulta de todas as transações de uma determinada conta, depois ter um outro serviço que retorne um PDF simples contendo uma tabela com as transações de uma determinada conta.
+D - Acredito que eu tenha conseguido respeitar o D de Dependency Inversion na organização do meu pacote, como por exemplo ao entregar para os controllers a responsabilidade de se registrarem no roteador, e não o contrário, porém acredito que um framework de Injeção de Dependências facilitaria a manutenção dessa boa prática. 
 
-  Segue no detalhe todas as características para o desafio...
-  
-  #### Premissas
+L - Em termos de Liskov, não lidei muito com composição de objetos.
 
-  - Crie uma API REST Full em golang com todos os CRUDS com o context path(/conductor/v1/api) e as seguintes tabelas: 
-  
-  ```
-    Table Account{
-      id int [pk, increment]
-      status varchar
-      created_at datetime
-      updated_at datetime
-      deleted_at datetime
+S - Respeitei o conceito de single responsability ao implementar os módulos pela ótica de sua utilização e não de suas funcionalidades, ou seja, um módulo deve ter uma responsabilidade de uso única, mesmo que tenha + de uma funcionalidade. Por exemplo os pacotes de Context, Controller e Facade lidam com + de uma entidade, porém são utilizados pela mesma razão.
+
+O - Encapsulei algumas funções, estruturas e constantes para que não fossem expostas para modificação.
+
+### Documentação 
+
+O endereço base, bem como o token de autorização em produção será enviado por email para os avaliadores do desafio. Abaixo segue breve documentação de cada endpoint.
+
+1. GET /accounts
+
+Endpoint de listagem de accounts. 
+
+Status codes esperados:
+* 200: Listagem concluída.
+* 204: Lista vazia.
+
+Resposta esperada:
+```
+{
+  "accounts": [
+    {
+    "created_at": "2021-02-25T05:13:07.319Z",
+    "deleted_at": "2021-02-25T05:13:07.319Z",
+    "id": 0,
+    "status": "string",
+    "updated_at": "2021-02-25T05:13:07.319Z"
     }
+  ]
+}
+```
 
-    Table Transactions{
-      id int [pk, increment]
-      valor numeric
-      id_card int
-      created_at datetime
-      updated_at datetime
-      deleted_at datetime  
-    }
+2. GET /accounts/{id}
 
+Endpoint de recuperação de uma account por ID
 
-    Table Cards{
-      id int [pk, increment]
-      amount numeric
-      id_account int
-      created_at datetime
-      updated_at datetime
-      deleted_at datetime  
-    }
+Parâmetros de rota:
+* id: ID do objeto account
 
-    Ref: Cards.id_account > Account.id
-    Ref: Transactions.id_card > Cards.id      
-  ```
-  
-  ![diagrama](https://github.com/devconductor/desafio-golang/raw/master/img/diagrama.png)
-    
-  - Todos os end-points deverão ser documentados com Swagger/Open API.
-  - Utilizar o banco de dados H2 ou SQLite para persistência dos dados em memória, assim facilitará a execução dos projetos durante as correções.
-  - Ao subir o projeto, preencher o banco com algum dado fake para testes.
-  - Criar path GET /contas/{id}/transacoes.pdf que irá retonar todas as transações dessa conta em um documento no formato PDF contendo uma tabela simples com os seguintes dados:
-  
-   | CONTA | TRANSAÇÃO | VALOR |
-   |-|-|-|
-   |3b1b1c0c-5c68-4352-b937-e3c68b6b1b16|Apple Store|199,50|
-   |c203b91a-91a4-41d2-8583-86401c0fb1e4|Netflix|27,50|
-  
-  - O que será diferencial:
+Status codes esperados:
+* 200: Objeto recuperado.
+* 204: Objeto não existe.
+* 400: Bad request (ID de tipo errado)
 
-    ```
-    * GRpc;
-    * Criação de Dockerfile;
-    * Testes Unitários;
-    * C.I com Circle CI ou Github Actions;
-    * Serviço ser multi tenancy;
-    * Layout e design para o PDF gerado;
-    ```
-    
-  - O que vamos avaliar:
+Resposta esperada:
+```
+{
+  "account": {
+   "created_at": "2021-02-25T06:23:17.081Z",
+    "deleted_at": "2021-02-25T06:23:17.081Z",
+    "id": 0,
+    "status": "string",
+    "updated_at": "2021-02-25T06:23:17.081Z"
+  }
+}
+```
 
-    ```
-    * Seu código; 
-    * Arquitetura e camadas da sua aplicação;
-    * Documentação do projeto e seu README.md
-    * Organização do código;
-    * Boas práticas;
-    ```
+3. DELETE /accounts/{id}
 
-### Instruções
+Endpoint para deletar um objeto account por seu ID.
 
-   1. Duplique esse repositório para um repositório privado, desenvolva a sua solução e commit dentro desse seu repositório.
-   2. Desenvolva. Você terá até 7 (sete) dias a partir da data do envio do desafio; 
-   3. Após concluir o desenvolvimento faça um push e adicione o usuário @devconductor ao seu repositório para que possamos ter permissão ao código.
-   4. Para que possamos testar sua solução, faço o deploy do seu projeto para alguma conta no http://heroku.com
-   5. Informe a URL externa do seu projeto no heroku.
-   6. Informe a URL externa de acesso ao swagger.
-   5. Responda ao e-mail enviado do desafio, adicionando cópia para: cc2e73ef.Conductor.onmicrosoft.com@amer.teams.ms notificando a finalização do desafio para validação.
+Parâmetros de rota:
+* id: ID do objeto account
 
+Status codes esperados:
+* 200: Objeto deletado.
+* 204: Objeto não existe.
+* 400: Bad request (ID de tipo errado)
 
-Boa Sorte!!!!
+Resposta esperada:
+```
+{
+  "account": {
+   "created_at": "2021-02-25T06:23:17.081Z",
+    "deleted_at": "2021-02-25T06:23:17.081Z",
+    "id": 0,
+    "status": "string",
+    "updated_at": "2021-02-25T06:23:17.081Z"
+  }
+}
+```
+
+4. PUT /accounts/{id}
+
+Endpoint para atualizar um objeto account por seu ID.
+
+Parâmetros de rota:
+* id: ID do objeto account
+* status: Status novo do objeto account
+
+Status codes esperados:
+* 200: Objeto atualizado.
+* 204: Objeto não existe.
+* 400: Bad request (ID de tipo errado)
+
+5. POST /accounts
+
+Endpoint para adicionar um novo objeto account
+
+Parâmetros de corpo:
+* Objeto account
+```
+{
+  "status": "string"
+}
+```
+
+Status codes esperados:
+* 200: Objeto adicionado.
+* 422: Entidade não pode ser processada.
+
+Resposta esperada:
+```
+{
+  "account": {
+   "created_at": "2021-02-25T06:23:17.081Z",
+    "deleted_at": "2021-02-25T06:23:17.081Z",
+    "id": 0,
+    "status": "string",
+    "updated_at": "2021-02-25T06:23:17.081Z"
+  }
+}
+```
+
+### URL's
+
+Swagger: https://conductortask.herokuapp.com/swagger/
+
+API: https://conductortask.herokuapp.com/api
