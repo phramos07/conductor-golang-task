@@ -34,16 +34,25 @@ func CreateAccountTable() {
 }
 
 // AddAccount Add new to the Account table
-func AddAccount(account model.Account) {
+func AddAccount(account model.Account) int64 {
 	statement, err := GetDbContext().Prepare(addQuery)
 	if err != nil {
 		panic("Couldn't execute Add account query")
 	}
 
-	_, err = statement.Exec(account.Status)
+	defer statement.Close()
+
+	result, err := statement.Exec(account.Status)
 	if err != nil {
 		panic(fmt.Sprintf("Couldn't execute query %s\n", addQuery))
 	}
+
+	lastID, err := result.LastInsertId()
+	if err != nil {
+		panic("Couldn't retrieve last ID, enitity was not added. Rolled back.")
+	}
+
+	return lastID
 }
 
 // GetAccounts gets all accounts

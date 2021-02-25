@@ -1,7 +1,8 @@
 package model
 
 const (
-	ERROR_DEFAULT = "DEFAULT_ERROR_TYPE"
+	ERROR_DEFAULT            = "DEFAULT_ERROR_TYPE"
+	ERROR_UNPROCESSABLE_JSON = "UNPROCESSABLE_JSON_ERROR_TYPE"
 )
 
 // CustomError Interface

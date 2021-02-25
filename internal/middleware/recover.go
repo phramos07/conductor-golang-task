@@ -26,6 +26,8 @@ func recoverInternal(w http.ResponseWriter) {
 			switch t.ErrorType() {
 			case model.ERROR_DEFAULT:
 				statusCode = http.StatusInternalServerError
+			case model.ERROR_UNPROCESSABLE_JSON:
+				statusCode = http.StatusUnprocessableEntity
 			}
 		case error:
 			err = t

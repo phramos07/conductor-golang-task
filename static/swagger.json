@@ -40,6 +40,39 @@
             }
           }
         }
+      },
+      "post": {
+        "description": "Creates new account in the database.",
+        "tags": [
+          "accounts"
+        ],
+        "summary": "Creates new account.",
+        "operationId": "postAccount",
+        "parameters": [
+          {
+            "x-go-name": "Account",
+            "name": "account",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "status"
+              ],
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "x-go-name": "Status"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/accountCreatedResponse"
+          }
+        }
       }
     },
     "/health": {
@@ -114,6 +147,21 @@
     }
   },
   "responses": {
+    "accountCreatedResponse": {
+      "description": "The AccountCreatedResponse contains the ID of the created account.",
+      "schema": {
+        "type": "object",
+        "required": [
+          "ID"
+        ],
+        "properties": {
+          "ID": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      }
+    },
     "accountsResponse": {
       "description": "An AccountsResponse response model\n\nThis is used for returning a response with multiple accounts as body",
       "schema": {

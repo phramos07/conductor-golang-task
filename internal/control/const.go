@@ -6,4 +6,6 @@ const (
 
 	contentTypeHeader = "Content-Type"
 	contentTypeJSON   = "application/json"
+
+	maxJSONSize = 4194304
 )
