@@ -1,6 +1,7 @@
 FROM golang:1.16.0-alpine AS build_base
 
 RUN apk add --no-cache git \
+                        build-base \
                         make \
                         upx
 
@@ -19,7 +20,7 @@ RUN go get -u github.com/go-swagger/go-swagger/cmd/swagger
 RUN make swagger
 
 # Unit tests
-# RUN CGO_ENABLED=0 go test -v
+RUN make test
 
 # Build the Go app
 RUN make build
