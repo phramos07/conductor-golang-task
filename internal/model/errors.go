@@ -1,8 +1,10 @@
 package model
 
+// Exported error constants
 const (
-	ERROR_DEFAULT            = "DEFAULT_ERROR_TYPE"
-	ERROR_UNPROCESSABLE_JSON = "UNPROCESSABLE_JSON_ERROR_TYPE"
+	ErrorDefault           = "DEFAULT_ERROR_TYPE"
+	ErrorUnprocessableJSON = "UNPROCESSABLE_JSON_ERROR_TYPE"
+	ErrorBadRequest        = "BAD_REQUEST_ERROR_TYPE"
 )
 
 // CustomError Interface

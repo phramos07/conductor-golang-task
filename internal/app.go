@@ -95,7 +95,7 @@ func main() {
 	loadEnv()
 
 	// Database load
-	dbcontext.Renew()
+	// dbcontext.Renew()
 	dbcontext.Create()
 	dbcontext.CreateTables()
 	defer dbcontext.Close()

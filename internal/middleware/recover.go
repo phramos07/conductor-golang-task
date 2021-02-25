@@ -24,9 +24,9 @@ func recoverInternal(w http.ResponseWriter) {
 		case model.CustomError:
 			err = t
 			switch t.ErrorType() {
-			case model.ERROR_DEFAULT:
+			case model.ErrorDefault:
 				statusCode = http.StatusInternalServerError
-			case model.ERROR_UNPROCESSABLE_JSON:
+			case model.ErrorUnprocessableJSON:
 				statusCode = http.StatusUnprocessableEntity
 			}
 		case error:
@@ -34,8 +34,7 @@ func recoverInternal(w http.ResponseWriter) {
 		default:
 			err = errors.New(unknownErrorStr)
 		}
-		log.Printf("Panic: %s\n", err.Error())
-		log.Printf("\n\nConteudo do erro: %s\n\n", err.Error())
+		log.Printf("Recovered from panic: %s\n", err.Error())
 		http.Error(w, err.Error(), statusCode)
 	}
 }

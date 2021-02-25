@@ -75,6 +75,99 @@
         }
       }
     },
+    "/accounts/{id}": {
+      "get": {
+        "description": "Retrieve account from the database that matches given ID.",
+        "tags": [
+          "accounts"
+        ],
+        "summary": "Retrieves one account by ID.",
+        "operationId": "getAccount",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "uint64",
+            "x-go-name": "ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Account retrieved.",
+            "schema": {
+              "$ref": "#/definitions/account"
+            }
+          },
+          "204": {
+            "description": "No account found with given ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "put": {
+        "description": "Updates the status of account from the database that matches given ID.",
+        "tags": [
+          "accounts"
+        ],
+        "summary": "Updates the status of one account by ID.",
+        "operationId": "updateAccount",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "uint64",
+            "x-go-name": "ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "Status",
+            "name": "status",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Account updated."
+          },
+          "204": {
+            "description": "No account found with given ID."
+          }
+        }
+      },
+      "delete": {
+        "description": "Deletes account from the database that matches given ID.",
+        "tags": [
+          "accounts"
+        ],
+        "summary": "Deletes one account by ID.",
+        "operationId": "deleteAccount",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "uint64",
+            "x-go-name": "ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Account deleted."
+          },
+          "204": {
+            "description": "No account found with given ID."
+          }
+        }
+      }
+    },
     "/health": {
       "get": {
         "description": "If the API is online, an OK will be returned.",

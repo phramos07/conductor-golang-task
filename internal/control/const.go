@@ -1,8 +1,10 @@
 package control
 
 const (
-	accountsPath = "/accounts"
-	healthPath   = "/health"
+	accountsPath     = "/accounts"
+	accountsByIDPath = "/accounts/{id}"
+
+	healthPath = "/health"
 
 	contentTypeHeader = "Content-Type"
 	contentTypeJSON   = "application/json"
