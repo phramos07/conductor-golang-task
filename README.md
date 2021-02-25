@@ -4,7 +4,7 @@ O desafio consistiu no design e implementação de uma aplicação web (API REST
 Até a presente entrega do desafio (25/02/2021) as seguintes features já foram implementadas:
 
 1. CICD completo com deploy em Heroku via container docker
-  * CI com os estágios de Lint, Test, Swagger do Generation e Trigger de CD
+  * CI com os estágios de Lint, Test, Swagger Generation e Trigger de CD
   * CD com Build local, Build da imagem docker e deploy do container em Heroku
 2. Arquitetura base do webapp:
   * Roteamento e pipeline HTTP em Gorilla Mux
@@ -32,6 +32,7 @@ O que ficou faltando até a data de 25/02/2021:
 7. Outros pormenores, como:
   * Extração de algumas constantes
   * Code-review
+  * Separação de ambientes de Prod e Staging no CICD
 
 ### Sobre o andamento do desenvolvimento
 
