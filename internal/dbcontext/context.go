@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	dbFilepath = "./internal/dbcontext/database.db"
+	dbFilepath = "database.db"
 )
 
 var dbcontext *sql.DB
